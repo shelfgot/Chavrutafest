@@ -5,7 +5,7 @@ var fs = require('fs');
 
 var listOfUnconnectedSockets = [];
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Chavrutafest.html');
   console.log("you just got served!")
 });
