@@ -144,58 +144,8 @@
   src="https://code.jquery.com/jquery-3.5.0.min.js"
   integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
   crossorigin="anonymous"></script>
-<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script src="client-side.js"></script>
-    <script>
-      $(document).ready(function(){
-        var eye_clicked = false;
-        var beard_clicked = false;
-        $('.beard').hover(function() {
-          $('.beard').attr('fill-opacity', "0.5").css({'cursor': 'pointer'});
-        }, function() {
-          if(!beard_clicked) {
-          $('.beard').attr('fill-opacity', "0.0");
-          }
-        });
-        $('.beard').click(function(event){
-          beard_clicked = true;
-          $(this).attr('fill-opacity', "0.5").css({'cursor': 'pointer'});
-          $('.arrow-up-orange').css({'position': 'absolute', 'top': event.pageY, 'left': event.pageX, 'opacity': '0.8', 'z-index': '100'});
-          $('.explanation-orange').css({'position': 'absolute', 'top': event.pageY + 15, 'left': event.pageX - 200, 'opacity': '0.8', 'z-index': '100'});
-          $('.welcome-wrapper').css({'display': 'block'});
-          //take off eye, if up
-          $('.sign-up-wrapper').css({'display': 'none'});
-        });
-        $('.eye').hover(function() {$('.eye').attr('fill-opacity', "0.5").css({'cursor': 'pointer'});}, function() {$('.eye').attr('fill-opacity', "0.0") })
-        $('.eye').click(function(event){
-          eye_clicked = true;
-          $(this).attr('fill-opacity', "0.5").css({'cursor': 'pointer'});
-          $('.arrow-up-blue').css({'position': 'absolute', 'top': event.pageY, 'left': event.pageX, 'opacity': '0.6', 'z-index': '100'});
-          $('.explanation-blue').css({'position': 'absolute', 'top': event.pageY + 15, 'left': event.pageX - 200, 'opacity': '0.9', 'z-index': '100'});
-          $('.sign-up-wrapper').css({'display': 'block'});
-          //take off beard
-          $('.welcome-wrapper').css({'display': 'none'});
-        });
-        
-        
-        //Once the submit button is clicked on the eye, it's time to bring in the big overlay.
-        $('.login').submit(function(event){
-          event.preventDefault();
-          $('.overlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 200}).append("<form class='start'><input type='submit'></form>");
-          $('.overlay').animate({'opacity': 1}, 1500);
-          console.log("overlay set:"+$('.overlay').css("display"))
-        });
-        //Then, once the submit button on the explanatory overlay is clicked, time to completely make over the entire page...
-        $(document).on('click','.start',function(){
-
-          console.log("found")
-
-          $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 300});
-            var socket = io();
-        });
-      });
-      
-    </script>
-
+<!--<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="/client-side.js"></script>
   </body>
 </html>
