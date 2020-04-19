@@ -25,8 +25,8 @@ var peerConnectionConfig = {
                     {'urls': 'stun:stun.l.google.com:19302'},
                   ]
                 };
-                //now we need to make a new rtc channel
-                peerConnection = new RTCPeerConnection(peerConnectionConfig);
+//now we need to make a new rtc channel
+peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   
 //HTML stuff
       $(document).ready(function(){
@@ -141,7 +141,8 @@ socket.on('roomCall', (room) => {
   roomName = room;
   console.log("we were assigned room num "+ roomName);
   socket.emit('setRoom', room);
-  peerConnection.createOffer().then(function() {
+  peerConnection.createOffer().then(offer => {
+    peerConnection.setLocalDescription(offer);
     console.log("offer created from "+peerConnection.localDescription)
      socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
   });
