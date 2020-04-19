@@ -29,7 +29,7 @@ var peerConnectionConfig = {
 peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   
   //when rtc gets another track, make that the OTHER video
-                peerConnection.ontrack = function(event) {
+                  peerConnection.ontrack = function(event) {
                       document.getElementById("otherVideo").srcObject = event.streams[0];
                     };
              
