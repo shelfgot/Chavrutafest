@@ -161,15 +161,15 @@ socket.on('connectRequest', (data) => {
     if(data.sdp.type == 'offer') {
       peerConnection.createAnswer().then(answer => {
         peerConnection.setLocalDescription(answer);
-        socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
-      }).catch(errorHandler);
+        socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName}) );
+      })
     }
   })
 });
 //ice sorcery part. I don't really understand what's going on here
 var addIce = function(event) {
     if(event.candidate !== null) {
-      socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': room}));
+      socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
     }
 }
 //event listener for ice candidates
