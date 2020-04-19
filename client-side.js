@@ -144,8 +144,11 @@ socket.on('roomCall', (room) => {
 });
 //the other case-scenario - what happens if you are the second person and you recieve a request?
 socket.on('connectRequest', (connectionData) => {
+  var data = JSON.parse(connectionData);
+  if(data.uuid == uuid) { return;}
+  console.log("we got a new connection req from "+data.sdp);
   peerConnection.setRemoteDescription(new RTCSessionDescription(connectionData.sdp)).then(function() {
-    var data = JSON.parse(connectionData);
+    
     console.log("we got a new connect request! num: "+data)
     //Put other person's screen name and email in the proper place
    // $('.otherScreenName').html(data.screenName);
