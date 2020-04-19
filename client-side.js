@@ -102,6 +102,86 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       document.getElementById("userVideo").srcObject = stream;
                        
                       peerConnection.addStream(stream);
+                      
+                                            
+                                            
+                                            //socket communication stuff
+                      var socket = io();
+                      var roomName;
+                      uuid = createUUID();
+                      //this is the case when the user is first...
+                      socket.on('roomCall', (room) => {
+                        //we have the assigned room name.
+                        roomName = room;
+                        console.log("we were assigned room num "+ roomName);
+                        socket.emit('setRoom', room);
+                        peerConnection.createOffer().then(offer => {
+                          peerConnection.setLocalDescription(offer);
+                          console.log("offer created from "+peerConnection.localDescription)
+                           socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
+                        });
+                      });
+                      //the other case-scenario - what happens if you are the second person and you recieve a request?
+                      socket.on('connectRequest', (data) => {
+                        if(data.uuid==uuid) {return;}
+                        console.log("we got a new connection req from "+data.sdp);
+                        peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(function() {
+                          
+                          console.log("we got a new connect request! num: "+data)
+                          //Put other person's screen name and email in the proper place
+                         // $('.otherScreenName').html(data.screenName);
+                          //$('.otherEmailAddress').html(data.emailAddress);
+                          // Only create answers in response to offers
+                          if(data.sdp.type == 'offer') {
+                            peerConnection.createAnswer().then(answer => {
+                              console.log("we provided an answer!")
+                              peerConnection.setLocalDescription(answer);
+                              socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName}) );
+                            })
+                          }
+                        })
+                      });
+                      //ice sorcery part. I don't really understand what's going on here
+                         //when rtc finds an ice candidate
+                      peerConnection.onicecandidate = function(event) {
+                        console.log("adding ice.")
+                          if(event.candidate !== null) {
+                            socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
+                          }
+                      }
+                      //event listener for ice candidates
+                      socket.on('ice', (iceCandidateData) => {
+                        console.log("ice coming!")
+                        iceData = JSON.parse(iceCandidateData);
+                        //check that the sender isn't the same person as the responder
+                        if(iceData.uuid == uuid) {
+                         return;
+                        }
+                        //now add ice candidate to list
+                        peerConnection.addIceCandidate(new RTCIceCandidate(iceData.ice))
+                      });
+                      
+                      //get room name
+                      socket.on('setRoom', (room) => {
+                        console.log("we set the room name.");
+                        roomName = room;
+                      });
+                      
+                      
+                      // Taken from http://stackoverflow.com/a/105074/515584
+                      // Strictly speaking, it's not a real UUID, but it gets the job done here
+                      function createUUID() {
+                      function s4() {
+                        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+                      }
+                      
+                      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+                      }
+                      
+                      
+                      
+                      
+                      
                       });
               }
               
@@ -134,75 +214,3 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
 
 
 
-//socket communication stuff
-var socket = io();
-var roomName;
-uuid = createUUID();
-//this is the case when the user is first...
-socket.on('roomCall', (room) => {
-  //we have the assigned room name.
-  roomName = room;
-  console.log("we were assigned room num "+ roomName);
-  socket.emit('setRoom', room);
-  peerConnection.createOffer().then(offer => {
-    peerConnection.setLocalDescription(offer);
-    console.log("offer created from "+peerConnection.localDescription)
-     socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
-  });
-});
-//the other case-scenario - what happens if you are the second person and you recieve a request?
-socket.on('connectRequest', (data) => {
-  if(data.uuid==uuid) {return;}
-  console.log("we got a new connection req from "+data.sdp);
-  peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(function() {
-    
-    console.log("we got a new connect request! num: "+data)
-    //Put other person's screen name and email in the proper place
-   // $('.otherScreenName').html(data.screenName);
-    //$('.otherEmailAddress').html(data.emailAddress);
-    // Only create answers in response to offers
-    if(data.sdp.type == 'offer') {
-      peerConnection.createAnswer().then(answer => {
-        console.log("we provided an answer!")
-        peerConnection.setLocalDescription(answer);
-        socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName}) );
-      })
-    }
-  })
-});
-//ice sorcery part. I don't really understand what's going on here
-   //when rtc finds an ice candidate
-peerConnection.onicecandidate = function(event) {
-  console.log("adding ice.")
-    if(event.candidate !== null) {
-      socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
-    }
-}
-//event listener for ice candidates
-socket.on('ice', (iceCandidateData) => {
-  console.log("ice coming!")
-  iceData = JSON.parse(iceCandidateData);
-  //check that the sender isn't the same person as the responder
-  if(iceData.uuid == uuid) {
-   return;
-  }
-  //now add ice candidate to list
-  peerConnection.addIceCandidate(new RTCIceCandidate(iceData.ice))
-});
-
-//get room name
-socket.on('setRoom', (room) => {
-  console.log("we set the room name.");
-  roomName = room;
-});
-
-
-// Taken from http://stackoverflow.com/a/105074/515584
-// Strictly speaking, it's not a real UUID, but it gets the job done here
-function createUUID() {
-function s4() {
-  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-}
-
-return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
