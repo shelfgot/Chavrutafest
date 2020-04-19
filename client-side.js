@@ -139,12 +139,13 @@ socket.on('roomCall', (room) => {
   console.log("we were assigned room num "+ roomName);
   socket.to(room).emit('setRoom', room)
   peerConnection.createOffer().then(function() {
-     io.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid}) );
+     socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
   });
 });
 //the other case-scenario - what happens if you are the second person and you recieve a request?
 socket.on('connectRequest', (connectionData) => {
   var data = JSON.parse(connectionData);
+  if(data.uuid==uuid) {return;}
   console.log("we got a new connection req from "+data.sdp);
   peerConnection.setRemoteDescription(new RTCSessionDescription(connectionData.sdp)).then(function() {
     
@@ -156,7 +157,7 @@ socket.on('connectRequest', (connectionData) => {
     if(data.sdp.type == 'offer') {
       peerConnection.createAnswer().then(function() {
         
-        io.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
+        socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
       }).catch(errorHandler);
     }
   })

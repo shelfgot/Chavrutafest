@@ -45,6 +45,11 @@ io.on('connection', (socket) => {
   connectUsers();
 });
 
+io.on('connectRequest', (input) => {
+  input = JSON.parse(input);
+  io.to(input.room).emit('connectRequest', input)
+});
+
 http.listen(process.env.PORT || 3000, () => {
   console.log('listening on *:3000');
 });
