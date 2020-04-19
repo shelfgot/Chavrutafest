@@ -19,6 +19,14 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
   
 var peerConnection, userStream, uuid,
                   screenName, emailAddress, otherScreenName, otherEmailAddress;
+var peerConnectionConfig = {
+                  'iceServers': [
+                    {'urls': 'stun:stun.stunprotocol.org:3478'},
+                    {'urls': 'stun:stun.l.google.com:19302'},
+                  ]
+                };
+                //now we need to make a new rtc channel
+                peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   
 //HTML stuff
       $(document).ready(function(){
@@ -71,14 +79,7 @@ var peerConnection, userStream, uuid,
               //set up variables we'll need later
           
               
-              var peerConnectionConfig = {
-                  'iceServers': [
-                    {'urls': 'stun:stun.stunprotocol.org:3478'},
-                    {'urls': 'stun:stun.l.google.com:19302'},
-                  ]
-                };
-                //now we need to make a new rtc channel
-                peerConnection = new RTCPeerConnection(peerConnectionConfig);
+              
                 //set up user's own video
               if(navigator.mediaDevices.getUserMedia) {
                 //both video and audio
