@@ -17,6 +17,9 @@ window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || 
 window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
 
   
+var peerConnection, userStream, uuid,
+                  screenName, emailAddress, otherScreenName, otherEmailAddress;
+                  
 //HTML stuff
       $(document).ready(function(){
         var eye_clicked = false;
@@ -60,8 +63,7 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
         $(document).on('click','.start',function(){
 
           console.log("found")
-            var peerConnection, userStream, uuid,
-                  screenName, emailAddress, otherScreenName, otherEmailAddress;
+            
 
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
             
