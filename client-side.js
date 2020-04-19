@@ -73,7 +73,7 @@ A) Set up the mechanism by which the client is let into the videocall space
                     video: true,
                     audio: true,
                   }).then(function(stream) {
-                      console.log(typeof(stream));
+                      
                       userStream = stream;
                       $('.userVideo').srcObject = userStream;
                   }).catch(errorHandler);
@@ -104,6 +104,7 @@ A) Set up the mechanism by which the client is let into the videocall space
                 //when rtc finds an ice candidate
                 peerConnection.onicecandidate = addIce;
                 //add our user's video to the rtc channel
+                console.log(typeof(stream))
                 peerConnection.addStream(userStream);
                 
                   
