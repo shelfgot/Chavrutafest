@@ -51,6 +51,11 @@ io.on('connectRequest', (input) => {
   io.to(input.room).emit('connectRequest', input)
 });
 
+io.on('setRoom', (roomName) => {
+  console.log("sending room number "+roomName+" down the line.")
+  io.to(roomName).emit('setRoom', roomName);
+});
+
 http.listen(process.env.PORT || 3000, () => {
   console.log('listening on *:3000');
 });
