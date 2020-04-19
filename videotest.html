@@ -1,0 +1,17 @@
+<html>
+<body>
+  <video width="400" height="400" id="userVideo" autoplay></video>
+<script>
+var userStream;
+if(navigator.mediaDevices.getUserMedia) {
+   navigator.mediaDevices.getUserMedia({audio: true, video:true}).then(function(stream) {
+          console.log("got the stream");
+                      userStream = stream;
+
+                 document.getElementById("userVideo").srcObject = userStream;
+
+          });
+              }
+</script>
+</body>
+</html>
