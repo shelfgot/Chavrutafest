@@ -144,8 +144,9 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       //ice sorcery part. I don't really understand what's going on here
                          //when rtc finds an ice candidate
                       peerConnection.onicecandidate = function(event) {
-                        console.log("adding ice.")
+                        
                           if(event.candidate !== null) {
+                            console.log("adding ice.");
                             socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
                           }
                       }

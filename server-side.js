@@ -53,6 +53,7 @@ io.on('connection', (socket) => {
     io.to(roomName).emit('setRoom', roomName);
   });
   socket.on('ice', (iceData) => {
+    iceData = JSON.parse(iceData);
     io.to(iceData.room).emit('ice', iceData)
   })
 });
