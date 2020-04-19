@@ -52,6 +52,9 @@ io.on('connection', (socket) => {
     console.log("sending room number "+roomName+" down the line.")
     io.to(roomName).emit('setRoom', roomName);
   });
+  socket.on('ice', (iceData) => {
+    io.to(iceData.room).emit('ice', iceData)
+  })
 });
 
 

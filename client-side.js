@@ -148,7 +148,6 @@ socket.on('roomCall', (room) => {
 });
 //the other case-scenario - what happens if you are the second person and you recieve a request?
 socket.on('connectRequest', (connectionData) => {
-  var data = JSON.parse(connectionData);
   if(data.uuid==uuid) {return;}
   console.log("we got a new connection req from "+data.sdp);
   peerConnection.setRemoteDescription(new RTCSessionDescription(connectionData.sdp)).then(function() {
@@ -169,7 +168,7 @@ socket.on('connectRequest', (connectionData) => {
 //ice sorcery part. I don't really understand what's going on here
 var addIce = function(event) {
     if(event.candidate !== null) {
-      socket.to(roomName).emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid}));
+      socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': room}));
     }
 }
 //event listener for ice candidates
