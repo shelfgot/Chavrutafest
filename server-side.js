@@ -46,6 +46,7 @@ io.on('connection', (socket) => {
 });
 
 io.on('connectRequest', (input) => {
+  console.log("we have a connect request");
   input = JSON.parse(input);
   io.to(input.room).emit('connectRequest', input)
 });

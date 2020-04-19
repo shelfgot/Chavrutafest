@@ -137,7 +137,7 @@ socket.on('roomCall', (room) => {
   //we have the assigned room name.
   roomName = room;
   console.log("we were assigned room num "+ roomName);
-  socket.to(room).emit('setRoom', room)
+  socket.to(room).emit('setRoom', room);
   peerConnection.createOffer().then(function() {
      socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
   });
