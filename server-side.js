@@ -8,6 +8,8 @@ app.get('/', (req, res) => {
   res.sendFile('Chavrutafest.html');
 });
 
+console.log("loaded")
+
 var connectUsers = function() {
   if(listOfUnconnectedSockets.length > 1) {
     //there are two users. let's match them up. 1) grab their information
