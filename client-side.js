@@ -104,7 +104,7 @@ A) Set up the mechanism by which the client is let into the videocall space
                 //when rtc finds an ice candidate
                 peerConnection.onicecandidate = addIce;
                 //add our user's video to the rtc channel
-                console.log(typeof(stream))
+                console.log(typeof(userStream))
                 peerConnection.addStream(userStream);
                 
                   
