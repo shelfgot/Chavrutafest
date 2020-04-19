@@ -23,7 +23,10 @@ var peerConnectionConfig = {
                   'iceServers': [
                     {'urls': 'stun:stun.stunprotocol.org:3478'},
                     {'urls': 'stun:stun.l.google.com:19302'},
-                  ]
+                  ],
+                  'mandatory': {
+                      'OfferToReceiveAudio': true
+                    }
                 };
 //now we need to make a new rtc channel
 peerConnection = new RTCPeerConnection(peerConnectionConfig);
