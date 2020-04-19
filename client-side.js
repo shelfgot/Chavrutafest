@@ -151,7 +151,7 @@ socket.on('roomCall', (room) => {
 socket.on('connectRequest', (data) => {
   if(data.uuid==uuid) {return;}
   console.log("we got a new connection req from "+data.sdp);
-  peerConnection.setRemoteDescription(new RTCSessionDescription(connectionData.sdp)).then(function() {
+  peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(function() {
     
     console.log("we got a new connect request! num: "+data)
     //Put other person's screen name and email in the proper place
@@ -159,8 +159,8 @@ socket.on('connectRequest', (data) => {
     //$('.otherEmailAddress').html(data.emailAddress);
     // Only create answers in response to offers
     if(data.sdp.type == 'offer') {
-      peerConnection.createAnswer().then(function() {
-        
+      peerConnection.createAnswer().then(answer => {
+        peerConnection.setLocalDescription(answer);
         socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
       }).catch(errorHandler);
     }
