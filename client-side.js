@@ -63,7 +63,7 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
             var peerConnection, userStream, uuid,
                   screenName, emailAddress, otherScreenName, otherEmailAddress;
 
-          $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 300});
+          $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000});
             var socket = io();
 
               //set up variables we'll need later
