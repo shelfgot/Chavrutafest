@@ -16,6 +16,8 @@ window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnecti
 window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
 window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
 
+    var peerConnection, userStream, uuid,
+                  screenName, emailAddress, otherScreenName, otherEmailAddress;
 
 //HTML stuff
       $(document).ready(function(){
@@ -65,8 +67,7 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
             var socket = io();
 
               //set up variables we'll need later
-              var peerConnection, userStream, uuid,
-                  screenName, emailAddress, otherScreenName, otherEmailAddress;
+          
               
               var peerConnectionConfig = {
                   'iceServers': [
