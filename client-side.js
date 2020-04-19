@@ -92,14 +92,14 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
                   navigator.mediaDevices.getUserMedia({
                     video: true,
                     audio: true,
-                  }).then(function(stream) {
+                  }, function(stream) {
                       console.log("got the stream");
                       userStream = stream;
                   
-                      document.getElementById("userVideo").srcObject = userStream;
+                      document.getElementById("userVideo").srcObject = stream;
                        
-                      peerConnection.addStream(userStream);
-                  }).catch(errorHandler);
+                      peerConnection.addStream(stream);
+                  });
               }
               else {
                   alert('Your browser does not support getUserMedia API');
