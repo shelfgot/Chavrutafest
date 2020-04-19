@@ -28,6 +28,12 @@ var peerConnectionConfig = {
 //now we need to make a new rtc channel
 peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   
+  //when rtc gets another track, make that the OTHER video
+                peerConnection.ontrack = function(event) {
+                      document.getElementById("otherVideo").srcObject = event.streams[0];
+                    };
+             
+                
 //HTML stuff
       $(document).ready(function(){
         var eye_clicked = false;
@@ -95,13 +101,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       peerConnection.addStream(stream);
                       });
               }
-                //when rtc gets another track, make that the OTHER video
-                peerConnection.ontrack = function(event) {
-                      document.getElementById("otherVideo").srcObject = event.streams[0];
-                    };
-                //when rtc finds an ice candidate
-                peerConnection.onicecandidate = addIce;
-                //add our user's video to the rtc channel
+              
                
               //PART 1
               
@@ -168,7 +168,8 @@ socket.on('connectRequest', (data) => {
   })
 });
 //ice sorcery part. I don't really understand what's going on here
-var addIce = function(event) {
+   //when rtc finds an ice candidate
+peerConnection.onicecandidate = function(event) {
   console.log("adding ice.")
     if(event.candidate !== null) {
       socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
