@@ -77,17 +77,7 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
                 };
                 //now we need to make a new rtc channel
                 peerConnection = new RTCPeerConnection(peerConnectionConfig);
-                //when rtc gets another track, make that the OTHER video
-                peerConnection.ontrack = function(event) {
-                      document.getElementById("otherVideo").srcObject = event.streams[0];
-                    };
-                //when rtc finds an ice candidate
-                peerConnection.onicecandidate = addIce;
-                //add our user's video to the rtc channel
-               
-              //PART 1
-              
-              //set up user's own video
+                //set up user's own video
               if(navigator.mediaDevices.getUserMedia) {
                 //both video and audio
                   navigator.mediaDevices.getUserMedia({
@@ -102,9 +92,17 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
                       peerConnection.addStream(stream);
                       });
               }
-              else {
-                  alert('Your browser does not support getUserMedia API');
-              }
+                //when rtc gets another track, make that the OTHER video
+                peerConnection.ontrack = function(event) {
+                      document.getElementById("otherVideo").srcObject = event.streams[0];
+                    };
+                //when rtc finds an ice candidate
+                peerConnection.onicecandidate = addIce;
+                //add our user's video to the rtc channel
+               
+              //PART 1
+              
+              
               //handle errors in loading the user's stream
               var errorHandler = function() {
                 console.log("Error in loading user's stream.");

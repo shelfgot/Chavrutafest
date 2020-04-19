@@ -1,17 +1,33 @@
 <html>
+  <head><script src="https://code.jquery.com/jquery-3.5.0.min.js"></script></head>
 <body>
-  <video width="400" height="400" id="userVideo" autoplay></video>
+  <div class="overlay">
+  Test...
+  </div>
+  <div class="videoOverlay" style="display: none">
+  <video id="userVideo" style="float:left; width: 50vw; height: 100vh" autoplay></video></div>
 <script>
-var userStream;
-if(navigator.mediaDevices.getUserMedia) {
-   navigator.mediaDevices.getUserMedia({audio: true, video:true}).then(function(stream) {
-          console.log("got the stream");
-                      userStream = stream;
+$(document).ready(function(){
+  $('.overlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 200}).append("<input type='submit' class='start'></input>");
+          $('.overlay').animate({'opacity': 1}, 1500);
+  $(document).on('click','.start',function(){
+    $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000});
+    var userStream;
+    if(navigator.mediaDevices.getUserMedia) {
+       navigator.mediaDevices.getUserMedia({audio: true, video:true}).then(function(stream) {
+              console.log("got the stream");
+                          userStream = stream;
+    
+                     document.getElementById("userVideo").srcObject = userStream;
+    
+              });
+                  }
+    
+  })
+    
+  
+})
 
-                 document.getElementById("userVideo").srcObject = userStream;
-
-          });
-              }
 </script>
 </body>
 </html>
