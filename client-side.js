@@ -74,7 +74,7 @@ A) Set up the mechanism by which the client is let into the videocall space
                 peerConnection = new RTCPeerConnection(peerConnectionConfig);
                 //when rtc gets another track, make that the OTHER video
                 peerConnection.ontrack = function(event) {
-                      $('.otherVideo').srcObject = event.streams[0];
+                      document.getElementById("otherVideo").srcObject = event.streams[0];
                     };
                 //when rtc finds an ice candidate
                 peerConnection.onicecandidate = addIce;
@@ -89,10 +89,10 @@ A) Set up the mechanism by which the client is let into the videocall space
                     video: true,
                     audio: true,
                   }).then(function(stream) {
-                      console.log("got the stream for "+$('.userVideo'));
+                      console.log("got the stream");
                       userStream = stream;
                   
-                      $('.userVideo').srcObject = userStream;
+                      document.getElementById("userVideo").srcObject = userStream;
                        
                       peerConnection.addStream(userStream);
                   }).catch(errorHandler);
