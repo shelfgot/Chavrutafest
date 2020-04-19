@@ -89,8 +89,9 @@ A) Set up the mechanism by which the client is let into the videocall space
                     video: true,
                     audio: true,
                   }).then(function(stream) {
-                      console.log("got the stream");
+                      console.log("got the stream for "+$('.userVideo'));
                       userStream = stream;
+                  
                       $('.userVideo').srcObject = userStream;
                        
                       peerConnection.addStream(userStream);
