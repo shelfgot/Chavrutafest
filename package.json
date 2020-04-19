@@ -1,0 +1,13 @@
+{
+  "name": "Chavrutafest",
+  "version": "1.0.0",
+  "description": "An application for short and sweet chavrutot.",
+  "scripts": {
+    "start": "node server-side.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "socket.io": "^2.2.0",
+    "express": "4.17.1"
+  }
+}
