@@ -73,6 +73,7 @@ A) Set up the mechanism by which the client is let into the videocall space
                     video: true,
                     audio: true,
                   }).then(function(stream) {
+                      console.log(typeof(stream));
                       userStream = stream;
                       $('.userVideo').srcObject = userStream;
                   }).catch(errorHandler);
