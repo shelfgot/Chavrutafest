@@ -64,32 +64,7 @@ A) Set up the mechanism by which the client is let into the videocall space
               var peerConnection, userStream, uuid,
                   screenName, emailAddress, otherScreenName, otherEmailAddress;
               
-              //PART 1
-              
-              //set up user's own video
-              if(navigator.mediaDevices.getUserMedia) {
-                //both video and audio
-                  navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true,
-                  }).then(function(stream) {
-                      
-                      userStream = stream;
-                      $('.userVideo').srcObject = userStream;
-                  }).catch(errorHandler);
-              }
-              else {
-                  alert('Your browser does not support getUserMedia API');
-              }
-              //handle errors in loading the user's stream
-              var errorHandler = function() {
-                console.log("Error in loading user's stream.");
-              };
-              
-                
-              //PART 2
-                
-                var peerConnectionConfig = {
+              var peerConnectionConfig = {
                   'iceServers': [
                     {'urls': 'stun:stun.stunprotocol.org:3478'},
                     {'urls': 'stun:stun.l.google.com:19302'},
@@ -104,8 +79,35 @@ A) Set up the mechanism by which the client is let into the videocall space
                 //when rtc finds an ice candidate
                 peerConnection.onicecandidate = addIce;
                 //add our user's video to the rtc channel
-                console.log(typeof(userStream))
-                peerConnection.addStream(userStream);
+               
+              //PART 1
+              
+              //set up user's own video
+              if(navigator.mediaDevices.getUserMedia) {
+                //both video and audio
+                  navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true,
+                  }).then(function(stream) {
+                      console.log("got the stream");
+                      userStream = stream;
+                      $('.userVideo').srcObject = userStream;
+                       
+                      peerConnection.addStream(userStream);
+                  }).catch(errorHandler);
+              }
+              else {
+                  alert('Your browser does not support getUserMedia API');
+              }
+              //handle errors in loading the user's stream
+              var errorHandler = function() {
+                console.log("Error in loading user's stream.");
+              };
+              
+                
+              //PART 2
+                
+               
                 
                   
                 
