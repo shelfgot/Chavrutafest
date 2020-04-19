@@ -155,7 +155,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         console.log("ice coming!")
                   
                         //check that the sender isn't the same person as the responder
-                        if(iceData.uuid == uuid) {
+                        if(iceCandidateData.uuid == uuid) {
                          return;
                         }
                         //now add ice candidate to list
