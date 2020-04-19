@@ -160,6 +160,7 @@ socket.on('connectRequest', (data) => {
     // Only create answers in response to offers
     if(data.sdp.type == 'offer') {
       peerConnection.createAnswer().then(answer => {
+        console.log("we provided an answer!")
         peerConnection.setLocalDescription(answer);
         socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName}) );
       })
@@ -168,12 +169,14 @@ socket.on('connectRequest', (data) => {
 });
 //ice sorcery part. I don't really understand what's going on here
 var addIce = function(event) {
+  console.log("adding ice.")
     if(event.candidate !== null) {
       socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
     }
 }
 //event listener for ice candidates
 socket.on('ice', (iceCandidateData) => {
+  console.log("ice coming!")
   iceData = JSON.parse(iceCandidateData);
   //check that the sender isn't the same person as the responder
   if(iceData.uuid == uuid) {
@@ -185,6 +188,7 @@ socket.on('ice', (iceCandidateData) => {
 
 //get room name
 socket.on('setRoom', (room) => {
+  console.log("we set the room name.");
   roomName = room;
 });
 
