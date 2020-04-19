@@ -43,18 +43,18 @@ io.on('connection', (socket) => {
   listOfUnconnectedSockets.push({'id': socket.id});
   //connect the socket to an unconnected user, if such user exists
   connectUsers();
+  socket.on('connectRequest', (input) => {
+    console.log("we have a connect request");
+    input = JSON.parse(input);
+    io.to(input.room).emit('connectRequest', input)
+  });
+  socket.on('setRoom', (roomName) => {
+    console.log("sending room number "+roomName+" down the line.")
+    io.to(roomName).emit('setRoom', roomName);
+  });
 });
 
-io.on('connectRequest', (input) => {
-  console.log("we have a connect request");
-  input = JSON.parse(input);
-  io.to(input.room).emit('connectRequest', input)
-});
 
-io.on('setRoom', (roomName) => {
-  console.log("sending room number "+roomName+" down the line.")
-  io.to(roomName).emit('setRoom', roomName);
-});
 
 http.listen(process.env.PORT || 3000, () => {
   console.log('listening on *:3000');
