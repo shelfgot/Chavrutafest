@@ -153,13 +153,13 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       //event listener for ice candidates
                       socket.on('ice', (iceCandidateData) => {
                         console.log("ice coming!")
-                        iceData = JSON.parse(iceCandidateData);
+                  
                         //check that the sender isn't the same person as the responder
                         if(iceData.uuid == uuid) {
                          return;
                         }
                         //now add ice candidate to list
-                        peerConnection.addIceCandidate(new RTCIceCandidate(iceData.ice))
+                        peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidateData.ice))
                       });
                       
                       //get room name
