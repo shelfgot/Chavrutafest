@@ -1,17 +1,129 @@
-<html>
-  <head><script src="https://code.jquery.com/jquery-3.5.0.min.js"></script></head>
-<body>
-  <div class="overlay">
-  Test...
-  </div>
-  <div class="videoOverlay" style="display: none">
-  <video id="userVideo" style="float:left; width: 50vw; height: 100vh" autoplay></video></div>
+<style>
+     @import url(//db.onlinewebfonts.com/c/211be15f3b79857b52ec64538f6032a2?family=MoMA+Sans+Web+Semibold);
+    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+      body {
+        margin:0;
+        font-family: "Roboto";
+      }
+      a {
+        color: black;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      section {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        z-index: 20;
+      }
+      svg {
+        position: relative;
+        z-index:20;
+      }
+      nav {
+        margin: 0;
+        padding: 0;
+        background: repeating-linear-gradient(
+            135deg,
+            #0090F1,
+            #0090F1 1px,
+            #FF6700 1px,
+            #FF6700 10px
+          );
+      }
+      .back {
+         
+        font-family: 'MoMA Sans Web Semibold', sans-serif;
+        font-size: 9.5em;
+        font-weight: bold;
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: rgba(0,0,0,0.2);
+        line-height: .8em;
+       
+      }
+      .love {
+        font-family: 'EB Garamond';
+        font-size: 1.25em;
+        padding-left: 1em;
+        padding-top: none;
+        margin-top: 0;
+        letter-spacing: .42em;
+      }
+      .arrow-up-orange {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        
+        border-bottom: 15px solid #ffDD00;
+      }
+      .arrow-up-blue {
+         opacity: 0;
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        
+        border-bottom: 15px solid rgba(34,34,255,0.8);
+      }
+      .explanation-orange {
+        background: #ffDD00;
+        width: 400;
+        border-radius: 15px;
+        padding: 20px;
+        font-family: sans-serif;
+      }
+      .explanation-blue {
+        background: #2222ff;
+        width: 400;
+        border-radius: 15px;
+        padding: 20px;
+        font-family: sans-serif;
+      }
+      aside {
+        display: none;
+      }
+      /* form elements */
+      .form-style-1 {
+        border:0;
+        border-radius: 4px;
+        height: 30px;
+        font-family: 'EB Garamond';
+      }
+      video {
+        
+        width: 50vw;
+        height: 100vmin;
+      }
+      
+    </style>
+  </head>
+  <body>
+
+        <!-- this is the overlay in which the magic happens -->
+        <div class="overlay" style="display: none; opacity: 0; position: absolute; z-index: 2"> Test....</div>
+        <div class="videoOverlay" style="display: none; opacity: 0">
+          <video id="userVideo" style="float: left; position: absolute; z-index: 100000" autoplay></video>
+      <!--    <video id="otherVideo" style="float: right; z-index: 100000" autoplay>
+            
+          </video>-->
+        </div>
+  <script
+  src="https://code.jquery.com/jquery-3.5.0.min.js"
+  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+  crossorigin="anonymous"></script>
 <script>
 $(document).ready(function(){
   $('.overlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 200}).append("<input type='submit' class='start'></input>");
           $('.overlay').animate({'opacity': 1}, 1500);
   $(document).on('click','.start',function(){
-    $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000});
+    $('.overlay').css({'display': 'none'});
+    $('.videoOverlay').css({'display': 'block', 'position': 'absolute', 'top': 0, 'left': 0, 'background': '#fff', "z-index": 3000, 'opacity': 1});
     var userStream;
     if(navigator.mediaDevices.getUserMedia) {
        navigator.mediaDevices.getUserMedia({audio: true, video:true}).then(function(stream) {
