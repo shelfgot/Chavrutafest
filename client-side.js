@@ -139,16 +139,17 @@ socket.on('roomCall', (room) => {
   console.log("we were assigned room num "+ roomName);
   socket.to(room).emit('setRoom', room)
   peerConnection.createOffer().then(function() {
-     socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
+     socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid}) );
   });
 });
 //the other case-scenario - what happens if you are the second person and you recieve a request?
 socket.on('connectRequest', (connectionData) => {
   peerConnection.setRemoteDescription(new RTCSessionDescription(connectionData.sdp)).then(function() {
     var data = JSON.parse(connectionData);
+    console.log("we got a new connect request! num: "+data)
     //Put other person's screen name and email in the proper place
-    $('.otherScreenName').html(data.screenName);
-    $('.otherEmailAddress').html(data.emailAddress);
+   // $('.otherScreenName').html(data.screenName);
+    //$('.otherEmailAddress').html(data.emailAddress);
     // Only create answers in response to offers
     if(data.sdp.type == 'offer') {
       peerConnection.createAnswer().then(function() {
