@@ -16,7 +16,6 @@ app.get('/client-side.js', (req, res) => {
   console.log("you just got served javascript!")
 });
 
-console.log("loaded")
 
 var connectUsers = function() {
   if(listOfUnconnectedSockets.length > 1) {

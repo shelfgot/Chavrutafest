@@ -64,7 +64,7 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
                   screenName, emailAddress, otherScreenName, otherEmailAddress;
 
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
-            var socket = io();
+            
 
               //set up variables we'll need later
           
@@ -120,67 +120,73 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
                 
                 
                 
-                var roomName;
-                uuid = createUUID();
-                //this is the case when the user is first...
-                socket.on('roomCall', (room) => {
-                  //we have the assigned room name.
-                  roomName = room;
-                  console.log("we were assigned room num "+ roomName);
-                  socket.to(room).emit('setRoom', room)
-                  peerConnection.createOffer().then(function() {
-                     socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
-                  });
-                });
-                //the other case-scenario - what happens if you are the second person and you recieve a request?
-                socket.on('connectRequest', (connectionData) => {
-                  peerConnection.setRemoteDescription(new RTCSessionDescription(connectionData.sdp)).then(function() {
-                    var data = JSON.parse(connectionData);
-                    //Put other person's screen name and email in the proper place
-                    $('.otherScreenName').html(data.screenName);
-                    $('.otherEmailAddress').html(data.emailAddress);
-                    // Only create answers in response to offers
-                    if(data.sdp.type == 'offer') {
-                      peerConnection.createAnswer().then(function() {
-                        
-                        socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
-                      }).catch(errorHandler);
-                    }
-                  })
-                });
-                //ice sorcery part. I don't really understand what's going on here
-                var addIce = function(event) {
-                    if(event.candidate !== null) {
-                      socket.to(roomName).emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid}));
-                    }
-                }
-                //event listener for ice candidates
-                socket.on('ice', (iceCandidateData) => {
-                  iceData = JSON.parse(iceCandidateData);
-                  //check that the sender isn't the same person as the responder
-                  if(iceData.uuid == uuid) {
-                   return;
-                  }
-                  //now add ice candidate to list
-                  peerConnection.addIceCandidate(new RTCIceCandidate(iceData.ice))
-                });
-                
-                //get room name
-                socket.on('setRoom', (room) => {
-                  roomName = room;
-                });
-
-              
-              // Taken from http://stackoverflow.com/a/105074/515584
-              // Strictly speaking, it's not a real UUID, but it gets the job done here
-              function createUUID() {
-                function s4() {
-                  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-                }
-              
-                return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-              }
+               
 
 
   });
 });
+
+
+
+//socket communication stuff
+var socket = io();
+var roomName;
+uuid = createUUID();
+//this is the case when the user is first...
+socket.on('roomCall', (room) => {
+  //we have the assigned room name.
+  roomName = room;
+  console.log("we were assigned room num "+ roomName);
+  socket.to(room).emit('setRoom', room)
+  peerConnection.createOffer().then(function() {
+     socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
+  });
+});
+//the other case-scenario - what happens if you are the second person and you recieve a request?
+socket.on('connectRequest', (connectionData) => {
+  peerConnection.setRemoteDescription(new RTCSessionDescription(connectionData.sdp)).then(function() {
+    var data = JSON.parse(connectionData);
+    //Put other person's screen name and email in the proper place
+    $('.otherScreenName').html(data.screenName);
+    $('.otherEmailAddress').html(data.emailAddress);
+    // Only create answers in response to offers
+    if(data.sdp.type == 'offer') {
+      peerConnection.createAnswer().then(function() {
+        
+        socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
+      }).catch(errorHandler);
+    }
+  })
+});
+//ice sorcery part. I don't really understand what's going on here
+var addIce = function(event) {
+    if(event.candidate !== null) {
+      socket.to(roomName).emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid}));
+    }
+}
+//event listener for ice candidates
+socket.on('ice', (iceCandidateData) => {
+  iceData = JSON.parse(iceCandidateData);
+  //check that the sender isn't the same person as the responder
+  if(iceData.uuid == uuid) {
+   return;
+  }
+  //now add ice candidate to list
+  peerConnection.addIceCandidate(new RTCIceCandidate(iceData.ice))
+});
+
+//get room name
+socket.on('setRoom', (room) => {
+  roomName = room;
+});
+
+
+// Taken from http://stackoverflow.com/a/105074/515584
+// Strictly speaking, it's not a real UUID, but it gets the job done here
+function createUUID() {
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+
+return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
