@@ -126,7 +126,7 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
                 socket.on('roomCall', (room) => {
                   //we have the assigned room name.
                   roomName = room;
-                  console.log(roomName);
+                  console.log("we were assigned room num "+ roomName);
                   socket.to(room).emit('setRoom', room)
                   peerConnection.createOffer().then(function() {
                      socket.to(room).emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'screenName': screenName, 'emailAddress': emailAddress}) );
