@@ -196,7 +196,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       });
                       
                       socket.on('end', () => {
-                        $('#otherVideo').remove();
+                        location.reload();
                       })
                       
                       // Taken from http://stackoverflow.com/a/105074/515584
