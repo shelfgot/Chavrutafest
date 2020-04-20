@@ -135,9 +135,9 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       //the other case-scenario - what happens if you are the second person and you recieve a request?
                       socket.on('connectRequest', (data) => {
                         if(data.uuid==uuid) {return;}
-                        console.log("we got a new connection req from "+data.screenName+", whose email is "+otherEmailAddress);
+                        console.log("we got a new connection req from "+data.screenName+", whose email is "+data.otherEmailAddress);
                         otherScreenName = data.screenName;
-                        otherEmailAddress = data.emailAddress;
+                        otherEmailAddress = data.otherEmailAddress;
                         //set clock
                         var sec = 0;
                         function pad ( val ) { return val > 9 ? val : "0" + val; }
