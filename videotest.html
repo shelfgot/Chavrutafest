@@ -1,145 +1,71 @@
-<style>
-     @import url(//db.onlinewebfonts.com/c/211be15f3b79857b52ec64538f6032a2?family=MoMA+Sans+Web+Semibold);
-    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-      body {
-        margin:0;
-        font-family: "Roboto";
-      }
-      a {
-        color: black;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-      section {
-        margin: 0;
-        padding: 0;
-        position: relative;
-        z-index: 20;
-      }
-      svg {
-        position: relative;
-        z-index:20;
-      }
-      nav {
-        margin: 0;
-        padding: 0;
-        background: repeating-linear-gradient(
-            135deg,
-            #0090F1,
-            #0090F1 1px,
-            #FF6700 1px,
-            #FF6700 10px
-          );
-      }
-      .back {
-         
-        font-family: 'MoMA Sans Web Semibold', sans-serif;
-        font-size: 9.5em;
-        font-weight: bold;
-        background-clip: text;
-        -webkit-background-clip: text;
-        color: rgba(0,0,0,0.2);
-        line-height: .8em;
-       
-      }
-      .love {
-        font-family: 'EB Garamond';
-        font-size: 1.25em;
-        padding-left: 1em;
-        padding-top: none;
-        margin-top: 0;
-        letter-spacing: .42em;
-      }
-      .arrow-up-orange {
-        opacity: 0;
-        width: 0;
-        height: 0;
-        border-left: 15px solid transparent;
-        border-right: 15px solid transparent;
-        
-        border-bottom: 15px solid #ffDD00;
-      }
-      .arrow-up-blue {
-         opacity: 0;
-        width: 0;
-        height: 0;
-        border-left: 15px solid transparent;
-        border-right: 15px solid transparent;
-        
-        border-bottom: 15px solid rgba(34,34,255,0.8);
-      }
-      .explanation-orange {
-        background: #ffDD00;
-        width: 400;
-        border-radius: 15px;
-        padding: 20px;
-        font-family: sans-serif;
-      }
-      .explanation-blue {
-        background: #2222ff;
-        width: 400;
-        border-radius: 15px;
-        padding: 20px;
-        font-family: sans-serif;
-      }
-      aside {
-        display: none;
-      }
-      /* form elements */
-      .form-style-1 {
-        border:0;
-        border-radius: 4px;
-        height: 30px;
-        font-family: 'EB Garamond';
-      }
-      video {
-        
-        width: 50vw;
-        height: 100vmin;
-      }
-      
-    </style>
-  </head>
-  <body>
+<html>
+<head>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700;800&display=swap');
+    .overlay {
+      background: rgba(255, 200, 0, 0.5);
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top:0;
+      left:0;
+    }
+    p {
+      text-align: center;
+      color: gray;
+      font-family: "Assistant";
+      font-size: 2em;
+      font-weight:200;
+    }
+    .defsection {
+      padding-left: 13vw;
+      padding-right: 13vw;
+      padding-top: 5vh;
 
-        <!-- this is the overlay in which the magic happens -->
-        <div class="overlay" style="display: none; opacity: 0; position: absolute; z-index: 2"> Test....</div>
-        <div class="videoOverlay" style="display: none; opacity: 0">
-          <video id="userVideo" style="float: left; position: absolute; z-index: 100000" autoplay></video>
-      <!--    <video id="otherVideo" style="float: right; z-index: 100000" autoplay>
-            
-          </video>-->
-        </div>
-  <script
-  src="https://code.jquery.com/jquery-3.5.0.min.js"
-  integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
-  crossorigin="anonymous"></script>
-<script>
-$(document).ready(function(){
-  $('.overlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 200}).append("<input type='submit' class='start'></input>");
-          $('.overlay').animate({'opacity': 1}, 1500);
-  $(document).on('click','.start',function(){
-    $('.overlay').css({'display': 'none'});
-    $('.videoOverlay').css({'display': 'block', 'position': 'absolute', 'top': 0, 'left': 0, 'background': '#fff', "z-index": 3000, 'opacity': 1});
-    var userStream;
-    if(navigator.mediaDevices.getUserMedia) {
-       navigator.mediaDevices.getUserMedia({audio: true, video:true}).then(function(stream) {
-              console.log("got the stream");
-                          userStream = stream;
+    }
+    .definition {
+      font-size: 1.5em;
+      font-family: "arial";
+      font-weight: bold;
+    }
+    .ipa {
+      font-size: 0.7em;
+      font-style: italic;
+      font-weight: normal;
+    }
+    .explanation {
+      font-family: "Assistant";
+      padding-top: 3vh;
+      text-align: justify;
+      padding-left: 0.5vw;
+      font-size: 1.1em;
+    }
     
-                     document.getElementById("userVideo").srcObject = userStream;
     
-              });
-                  }
+    aside {
+    height: auto;
+    overflow: hidden;
+    padding: 2vw;
+    background: #fff;
+    box-shadow: 0 5px 7px rgba(0,0,0,0.05);
+    }
     
-  })
     
-  
-})
-
-</script>
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <p style="letter-spacing: 0.3em">"כי טוב יום בחצירך מאלף"</p>
+    <p>"For one day in your halls is better than a thousand elsewhere."</p>
+    <section class="defsection">
+      <aside>
+      <div class="definition">Chav·ru·ta·fest<span class="ipa"> /χɐvrutɐfɛst/</span></div>
+      <span class="def">: a party where chavrutot (study pairs) are randomly matched up, there is enough food to ensure that there is never room for dessert, and the Torah learned is discussed into all hours of the night.</span></aside>
+      <div class="explanation">
+        To paraphrase one of our blessed Sages: in a place where there are no people, attempt to connect people. The Chavrutafest project is an attempt to bridge some of the distances that we might be feeling in these quieter days and to enable the mass learning of Torah in a fun and interesting way.
+        Upon entering, you will be paired up with a random chavruta. Come prepared with something to suggest to learn, although we will provide suggestions if desired. The session will last 15 minutes, but your chavruta's information will have been up on the screen should you want to continue the learning. Enjoy and happy learning!
+      </div>
+    </section>
+  </div>
 </body>
 </html>
