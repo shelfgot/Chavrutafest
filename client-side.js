@@ -130,9 +130,9 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       //the other case-scenario - what happens if you are the second person and you recieve a request?
                       socket.on('connectRequest', (data) => {
                         if(data.uuid==uuid) {return;}
-                        console.log("we got a new connection req from "+data.sdp);
+                        console.log("we got a new connection req from "+data.screenName);
                         otherScreenName = data.screenName;
-                        otherEmail = data.email;
+                        otherEmail = data.emailAdress;
                         //set clock
                         var sec = 0;
                         function pad ( val ) { return val > 9 ? val : "0" + val; }
@@ -152,7 +152,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                             peerConnection.createAnswer().then(answer => {
                               console.log("we provided an answer!")
                               peerConnection.setLocalDescription(answer);
-                              socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName, 'screenName': screenName, 'email': email}) );
+                              socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName, 'screenName': screenName, 'email': emailAddress}) );
                             })
                           }
                         })
