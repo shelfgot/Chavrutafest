@@ -36,7 +36,9 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                     
                       document.getElementById("otherVideo").srcObject = event.streams[0];
                       $('svg').remove();
-                      $('.overlay').remove();
+                      $(document).on('ready', function(){
+                        $(this).closest('.start').remove();
+                      });
                       $('.bottomBar').css({"display": 'block'});
                       if(document.getElementsByClassName('info').length === 0) {
                         $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+emailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; left: 50vw'>"+otherEmailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 50vw'>"+otherScreenName+"</p>");
