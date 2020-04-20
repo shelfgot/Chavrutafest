@@ -127,7 +127,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         peerConnection.createOffer().then(offer => {
                           peerConnection.setLocalDescription(offer);
                           console.log("offer created from "+peerConnection.localDescription)
-                           socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room, 'screenName': screenName, 'email': email}) );
+                           socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room, 'screenName': screenName, 'emailAddress': emailAddress}) );
                            
                               socket.emit('started', roomName);
                         });
