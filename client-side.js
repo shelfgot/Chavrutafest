@@ -198,6 +198,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                           }
                       }
                       peerConnection.oniceconnectionstatechange = function() {
+                        console.log("disconnected");
                            if(peerConnection.iceConnectionState == 'disconnected') {
                               $('.disconnect').css({'position': 'absolute', 'display': 'block', 'width': '50vw', 'right': 0, 'background': 'black', 'color': 'white', 'font-family': 'Arial', 'text-align': 'center'});
                             }
