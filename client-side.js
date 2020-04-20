@@ -35,11 +35,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   peerConnection.ontrack = function(event) {
                       document.getElementById("otherVideo").srcObject = event.streams[0];
                       $('.bottomBar').css({"display": 'block'});
-                              $('.myEmail').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+email+"</p>");
-                              $('.myScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p>");
-                              
-                              $('.otherEmail').append("<p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmail+"</p>");
-                              $('.otherScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
+                      $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+email+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmail+"</p><p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
 
                     };
              
@@ -85,13 +81,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
         });
         //Then, once the submit button on the explanatory overlay is clicked, time to completely make over the entire page...
         $(document).on('click','.start',function(){
-          //set clock
-           var sec = 0;
-          function pad ( val ) { return val > 9 ? val : "0" + val; }
-          setInterval( function(){
-              $("#seconds").html(pad(++sec%60));
-              $("#minutes").html(pad(parseInt(sec/60,10)));
-          }, 1000);
+          
           //get the email and screen name
           var screenName = $('#screen_name').val();
           var email = $('#email').val();
@@ -144,6 +134,13 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         console.log("we got a new connection req from "+data.sdp);
                         otherScreenName = data.screenName;
                         otherEmail = data.email;
+                        //set clock
+                        var sec = 0;
+                        function pad ( val ) { return val > 9 ? val : "0" + val; }
+                        setInterval( function(){
+                            $("#seconds").html(pad(++sec%60));
+                            $("#minutes").html(pad(parseInt(sec/60,10)));
+                        }, 1000);
                         
                         peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(function() {
                           
