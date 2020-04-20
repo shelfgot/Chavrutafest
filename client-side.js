@@ -149,15 +149,12 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(function() {
                           
                           console.log("we got a new connect request! num: "+data)
-                          //Put other person's screen name and email in the proper place
-                         // $('.otherScreenName').html(data.screenName);
-                          //$('.otherEmailAddress').html(data.emailAddress);
-                          // Only create answers in response to offers
+                          
                           if(data.sdp.type == 'offer') {
                             peerConnection.createAnswer().then(answer => {
                               console.log("we provided an answer!")
                               peerConnection.setLocalDescription(answer);
-                              socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName, 'screenName': screenName, 'email': emailAddress}) );
+                              socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName, 'screenName': screenName, 'emailAddress': emailAddress}) );
                             })
                           }
                         })
