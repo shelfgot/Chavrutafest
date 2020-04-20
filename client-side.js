@@ -72,7 +72,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
         //Once the submit button is clicked on the eye, it's time to bring in the big overlay.
         $('.login').submit(function(event){
           event.preventDefault();
-          $('.overlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, "z-index": 200}).append("<input type='submit' class='start' value='Start!' style='background: #2299ff; color: white; font-family: arial; width: 20vw; height: 8vh; position: relative; left: 45vw;'></input>");
+          $('.overlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, "z-index": 200}).append("<input type='submit' class='start' value='Start!' style='background: #2299ff; color: white; font-family: arial; width: 20vw; height: 8vh; position: relative; left: 45vw; border: none; border-radius: 4vh; font-size: 1.3em'></input>");
           $('.overlay').animate({'opacity': 1}, 1500);
           console.log("overlay set:"+$('.overlay').css("display"))
         });
