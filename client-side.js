@@ -36,7 +36,6 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       document.getElementById("otherVideo").srcObject = event.streams[0];
                       $('.bottomBar').css({"display": 'block'});
                       $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+email+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmail+"</p><p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
-
                     };
              
                 
