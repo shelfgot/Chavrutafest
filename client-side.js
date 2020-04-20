@@ -35,9 +35,10 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   peerConnection.ontrack = function(event) {
                     
                       document.getElementById("otherVideo").srcObject = event.streams[0];
-                      $('svg').remove();
+                      
                       $(document).on('ready', function(){
                         $(this).closest('.start').remove();
+                        $(this).closest('svg').remove();
                       });
                       $('.bottomBar').css({"display": 'block'});
                       if(document.getElementsByClassName('info').length === 0) {
