@@ -34,6 +34,13 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
   //when rtc gets another track, make that the OTHER video
                   peerConnection.ontrack = function(event) {
                       document.getElementById("otherVideo").srcObject = event.streams[0];
+                      $('.bottomBar').css({"display": 'block'});
+                              $('.myEmail').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+email+"</p>");
+                              $('.myScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p>");
+                              
+                              $('.otherEmail').append("<p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmail+"</p>");
+                              $('.otherScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
+
                     };
              
                 
@@ -154,6 +161,8 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                           peerConnection.setLocalDescription(offer);
                           console.log("offer created from "+peerConnection.localDescription)
                            socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room, 'screenName': screenName, 'email': email}) );
+                           
+                              socket.emit('started', roomName);
                         });
                       });
                       //the other case-scenario - what happens if you are the second person and you recieve a request?
@@ -190,17 +199,8 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       }
                       peerConnection.oniceconnectionstatechange = function() {
                            if(peerConnection.iceConnectionState == 'disconnected') {
-                              $('.disconnect').css({'position': 'absolute', 'display': 'block', 'width': '50vw', 'right': 0, 'background': 'black', 'color': 'white', 'font-family': 'Arial', 'padding': '20vw', 'text-align': 'center'});
+                              $('.disconnect').css({'position': 'absolute', 'display': 'block', 'width': '50vw', 'right': 0, 'background': 'black', 'color': 'white', 'font-family': 'Arial', 'text-align': 'center'});
                             }
-                           else if(peerConnection.iceConnectionState == 'connected') {
-                              $('.bottomBar').css({"display": 'block'});
-                              $('.myEmail').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+email+"</p>");
-                              $('.myScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p>");
-                              
-                              $('.otherEmail').append("<p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmail+"</p>");
-                              $('.otherScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
-                              socket.emit('started', roomName);
-                           }
                       }
                       //event listener for ice candidates
                       socket.on('ice', (iceCandidateData) => {
