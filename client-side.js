@@ -35,7 +35,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   peerConnection.ontrack = function(event) {
                       document.getElementById("otherVideo").srcObject = event.streams[0];
                       $('.bottomBar').css({"display": 'block'});
-                      $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+email+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmail+"</p><p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
+                      $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+emailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
                     };
              
                 
@@ -83,8 +83,8 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
           
           //get the email and screen name
           var screenName = $('#screen_name').val();
-          var email = $('#email').val();
-          var otherScreenName, otherEmail;
+          var emailAddress = $('#email').val();
+          var otherScreenName, otherEmailAddress;
 
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
             
