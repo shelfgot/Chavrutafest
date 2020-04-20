@@ -8,6 +8,9 @@ var listOfUnconnectedSockets = [];
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Chavrutafest.html');
   console.log("you just got served!")
+  if(!request.secure){
+    response.redirect("https://" + request.headers.host + request.url);
+  }
 });
 
 app.get('/client-side.js', (req, res) => {
