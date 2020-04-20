@@ -39,7 +39,6 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       $('.bottomBar').css({"display": 'block'});
                       $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+emailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
                     };
-             
                 
 //HTML stuff
       $(document).ready(function(){
