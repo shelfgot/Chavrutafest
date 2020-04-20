@@ -83,10 +83,10 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
         $(document).on('click','.start',function(){
           
           //get the email and screen name
-          var screenName = $('#screen-name').val();
-          var emailAddress = $('#email').val();
+          screenName = $('#screen-name').val();
+          emailAddress = $('#email').val();
           console.log("Our screen name is "+screenName+" and our email is "+emailAddress);
-          var otherScreenName, otherEmailAddress;
+       
 
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
             
@@ -134,7 +134,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         if(data.uuid==uuid) {return;}
                         console.log("we got a new connection req from "+data.screenName);
                         otherScreenName = data.screenName;
-                        otherEmail = data.emailAdress;
+                        otherEmailAddress = data.emailAdress;
                         //set clock
                         var sec = 0;
                         function pad ( val ) { return val > 9 ? val : "0" + val; }
