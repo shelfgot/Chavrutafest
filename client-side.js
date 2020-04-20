@@ -83,8 +83,9 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
         $(document).on('click','.start',function(){
           
           //get the email and screen name
-          var screenName = $('#screen_name').val();
+          var screenName = $('#screen-name').val();
           var emailAddress = $('#email').val();
+          console.log("Our screen name is "+screenName+" and our email is "+emailAddress);
           var otherScreenName, otherEmailAddress;
 
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
