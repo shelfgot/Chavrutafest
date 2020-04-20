@@ -39,7 +39,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       $('.start').remove();
                       $('.bottomBar').css({"display": 'block'});
                       if(document.getElementsByClassName('info').length === 0) {
-                        $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+emailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
+                        $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+emailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; left: 50vw'>"+otherEmailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 50vw'>"+otherScreenName+"</p>");
                       }
                     };
                 
