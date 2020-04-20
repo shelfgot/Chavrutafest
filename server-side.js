@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
   });
   socket.on('started', (room) => {
     setTimeout(function() {
-      io.to(room).emit('end')}, 10000);
+      io.to(room).emit('end')}, 900000);
   })
 });
 
