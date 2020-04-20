@@ -168,12 +168,13 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                             socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
                           }
                       }
-                    /*  peerConnection.oniceconnectionstatechange = function() {
-                        console.log("disconnected");
-                           if(peerConnection.iceConnectionState == 'disconnected') {
+                     peerConnection.oniceconnectionstatechange = function() {
+                        
+                           if(peerConnection.iceConnectionState === 'disconnected') {
+                             console.log("disconnected");
                               $('.disconnect').css({'position': 'absolute', 'display': 'block', 'width': '50vw', 'right': 0, 'background': 'black', 'color': 'white', 'font-family': 'Arial', 'text-align': 'center'});
                             }
-                      }*/
+                      }
                       //event listener for ice candidates
                       socket.on('ice', (iceCandidateData) => {
                         console.log("ice coming!")
