@@ -35,11 +35,6 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                   peerConnection.ontrack = function(event) {
                     
                       document.getElementById("otherVideo").srcObject = event.streams[0];
-                      
-                      $(document).on('ready', function(){
-                        $(this).closest('.start').remove();
-                        $(this).closest('svg').remove();
-                      });
                       $('.bottomBar').css({"display": 'block'});
                       if(document.getElementsByClassName('info').length === 0) {
                         $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+emailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; left: 50vw'>"+otherEmailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 50vw'>"+otherScreenName+"</p>");
@@ -87,7 +82,8 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
         });
         //Then, once the submit button on the explanatory overlay is clicked, time to completely make over the entire page...
         $(document).on('click','.start',function(){
-          
+          $(this).remove();
+          $('svg').remove();
           //get the email and screen name
           screenName = $('#screen-name').val();
           emailAddress = $('#email').val();
