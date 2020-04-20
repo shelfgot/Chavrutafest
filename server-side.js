@@ -55,6 +55,9 @@ io.on('connection', (socket) => {
   socket.on('ice', (iceData) => {
     iceData = JSON.parse(iceData);
     io.to(iceData.room).emit('ice', iceData)
+  });
+  socket.on('started', (room) => {
+    setTimeout(io.to(room).emit('end'), 15*60*1000);
   })
 });
 

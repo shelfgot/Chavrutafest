@@ -78,9 +78,44 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
         });
         //Then, once the submit button on the explanatory overlay is clicked, time to completely make over the entire page...
         $(document).on('click','.start',function(){
-
-          console.log("found")
-            
+          //set clock
+          setInterval( function() {
+              var hours = new Date().getHours();
+              var mins = new Date().getMinutes();
+              var hdegree = hours * 30 + (mins / 2);
+              var hrotate = "rotate(" + hdegree + "deg)";
+              
+              $(".hand").css("opacity","1");
+              
+              $("#hour").css({
+                "-webkit-transform" : hrotate,
+                "-moz-transform" : hrotate,
+                "-ms-transform" : hrotate,
+                "-o-transform" : hrotate,
+                "transform" : hrotate
+              });
+              
+            }, 1000 );
+      
+            setInterval( function() {
+              var mins = new Date().getMinutes();
+              var mdegree = mins * 6;
+              var mrotate = "rotate(" + mdegree + "deg)";
+              
+              $("#minute").css({
+                "-webkit-transform" : mrotate,
+                "-moz-transform" : mrotate,
+                "-ms-transform" : mrotate,
+                "-o-transform" : mrotate,
+                "transform" : mrotate
+              });
+              
+            }, 1000 );
+          
+          //get the email and screen name
+          var screenName = $('#screen_name').val();
+          var email = $('#email').val();
+          var otherScreenName, otherEmail;
 
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
             
@@ -118,13 +153,16 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         peerConnection.createOffer().then(offer => {
                           peerConnection.setLocalDescription(offer);
                           console.log("offer created from "+peerConnection.localDescription)
-                           socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room}) );
+                           socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room, 'screenName': screenName, 'email': email}) );
                         });
                       });
                       //the other case-scenario - what happens if you are the second person and you recieve a request?
                       socket.on('connectRequest', (data) => {
                         if(data.uuid==uuid) {return;}
                         console.log("we got a new connection req from "+data.sdp);
+                        otherScreenName = data.screenName;
+                        otherEmail = data.email;
+                        
                         peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(function() {
                           
                           console.log("we got a new connect request! num: "+data)
@@ -136,7 +174,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                             peerConnection.createAnswer().then(answer => {
                               console.log("we provided an answer!")
                               peerConnection.setLocalDescription(answer);
-                              socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName}) );
+                              socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName, 'screenName': screenName, 'email': email}) );
                             })
                           }
                         })
@@ -149,6 +187,20 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                             console.log("adding ice.");
                             socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
                           }
+                      }
+                      peerConnection.oniceconnectionstatechange = function() {
+                           if(peerConnection.iceConnectionState == 'disconnected') {
+                              $('.disconnect').css({'position': 'absolute', 'display': 'block', 'width': '50vw', 'right': 0, 'background': 'black', 'color': 'white', 'font-family': 'Arial', 'padding': '20vw', 'text-align': 'center'});
+                            }
+                           else if(peerConnection.iceConnectionState == 'connected') {
+                              $('.bottomBar').css({"display": 'block'});
+                              $('.myEmail').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+email+"</p>");
+                              $('.myScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p>");
+                              
+                              $('.otherEmail').append("<p class='info' style='position: absolute; bottom: 0; right: 0'>"+otherEmail+"</p>");
+                              $('.otherScreenName').append("<p class='info' style='position: absolute; bottom: 10vh; right: 0'>"+otherScreenName+"</p>");
+                              socket.emit('started', roomName);
+                           }
                       }
                       //event listener for ice candidates
                       socket.on('ice', (iceCandidateData) => {
@@ -168,6 +220,9 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         roomName = room;
                       });
                       
+                      socket.on('end', () => {
+                        $('#otherVideo').remove();
+                      })
                       
                       // Taken from http://stackoverflow.com/a/105074/515584
                       // Strictly speaking, it's not a real UUID, but it gets the job done here
@@ -185,24 +240,6 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       
                       });
               }
-              
-               
-              //PART 1
-              
-              
-              //handle errors in loading the user's stream
-              var errorHandler = function() {
-                console.log("Error in loading user's stream.");
-              };
-              
-                
-              //PART 2
-                
-               
-                
-                  
-                
-                
                 
                 
                 
