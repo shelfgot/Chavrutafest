@@ -9,7 +9,8 @@
 
   gtag('config', 'UA-164078657-1');
 </script>
-
+<!-- recaptcha stuff-->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700;800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap');
@@ -225,6 +226,10 @@
     <div class="arrow-up-blue"></div>
     <div class="explanation-blue" style="opacity: 0">
       <form class="login">
+        <div id='recaptcha' class="g-recaptcha"
+          data-sitekey="6Ld4OewUAAAAADCQOM7inww82QCqBPH6Cq5mqOVX"
+          
+          data-size="invisible"></div>
         <input type="email" name="email" id="email" placeholder=" ❧ Email" class="form-style-1" required/>
         <input name="screen-name" id="screen-name" placeholder=" ❧ Screen name" class="form-style-1"  required/>
         <input type="submit" id="submit" value="Enter!" class="form-style-1"/>
@@ -244,7 +249,8 @@
       <span class="def">: a party where chavrutot (study pairs) are randomly matched up, there is enough food to ensure that there is never room for dessert, and the Torah learned is discussed into all hours of the night.</span></div>
       <div class="explanation">
         To paraphrase one of our Sages of blessed memory: in a place where there are no people, attempt to connect people. The Chavrutafest project is an attempt to bridge some of the distances that we might be feeling in these quieter days and to enable the mass learning of Torah in a fun and interesting way.
-        Upon entering, you will be paired up with a random chavruta. Come prepared with something to suggest to learn, although we will provide suggestions if desired. The session will last 15 minutes, but your chavruta's information will have been up on the screen should you want to continue the learning. Enjoy and happy learning!
+        Upon entering, you will be paired up with a random chavruta. Come prepared with something to suggest to learn. The session will last 15 minutes, but your chavruta's information will have been up on the screen should you want to continue the learning. Enjoy and happy learning!
+        <b>Note: this application is built with cutting-edge WebRTC technology, and as such only reliably works on Google Chrome.</b>
       </div>
     </section></div>
         <div class="videoOverlay" style="display: none; opacity: 0">
@@ -274,3 +280,7 @@
   <script src="/client-side.js"></script>
   </body>
 </html>
+
+
+
+secret key: 6Ld4OewUAAAAAKzbBcU7oqfxYkWvIILO0x6rPZ0V

@@ -76,6 +76,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
         //Once the submit button is clicked on the eye, it's time to bring in the big overlay.
         $('.login').submit(function(event){
           event.preventDefault();
+          grecaptcha.execute();
           $('.overlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, "z-index": 200}).append("<input type='submit' class='start' value='Start!' style='background: #2299ff; color: white; font-family: arial; width: 20vw; height: 8vh; position: relative; left: 40vw; border: none; border-radius: 4vh; font-size: 1.3em; margin-top: 10vh;'></input>");
           $('.overlay').animate({'opacity': 1}, 1500);
           console.log("overlay set:"+$('.overlay').css("display"))
@@ -95,7 +96,9 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
 
               //set up variables we'll need later
           
-              
+              var errorHandler = function(error) {
+                console.log("error: "+error);
+              }
               
                 //set up user's own video
               if(navigator.mediaDevices.getUserMedia) {
@@ -211,7 +214,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       
                       
                       
-                      });
+                      }).catch(errorHandler(e));
               }
                 
                 
