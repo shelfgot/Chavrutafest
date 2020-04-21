@@ -30,6 +30,7 @@ var connectUsers = function() {
     //2) grab them
     var secondUser = io.sockets.sockets[secondUserInfo];
     var firstUser = io.sockets.sockets[firstUserInfo];
+    if(typeof(firstUser) == 'undefined') { return;}
     var roomName =  firstUserInfo + "+" + secondUserInfo;
     console.log("room "+roomName+" was created, with"+firstUser+" and "+secondUser)
     //3) join them to a room
