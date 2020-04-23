@@ -214,7 +214,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       
                       
                       
-                      }).catch(errorHandler(e));
+                      }).catch(e => errorHandler(e));
               }
                 
                 
