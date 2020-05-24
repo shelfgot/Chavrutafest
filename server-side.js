@@ -55,6 +55,7 @@ io.on('connection', (socket) => {
     }
     else {
       socket.join(socket.handshake.query.random);
+      socket.emit('roomCall', socket.handshake.query.random);
     }
 
   //connect the socket to an unconnected user, if such user exists
