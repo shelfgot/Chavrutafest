@@ -114,7 +114,7 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       peerConnection.addStream(stream);
                       
                                             
-                      var random = true;
+                      var random = "yes";
                       if ($('#room-name').val() !== '') {
                         random = $('#room-name').val();
                       }

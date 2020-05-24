@@ -8,9 +8,9 @@ var listOfUnconnectedSockets = [];
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Chavrutafest.html');
   console.log("you just got served!")
-  if(req.get('X-Forwarded-Proto')!='https') {
+  /*if(req.get('X-Forwarded-Proto')!='https') {
     res.redirect("https://" + req.headers.host + req.url);
-  }
+  }*/
 });
 
 app.get('/client-side.js', (req, res) => {
@@ -48,9 +48,9 @@ io.on('connection', (socket) => {
 
     //make sure this is us and no one else
     
-    //random is either true if it's random or it's the name of the room
-    if(socket.handshake.query.random === true) {
-      listOfUnconnectedSockets.push({'id': socket.id, 'uuid': random[1]});
+    //random is either yes if it's random or it's the name of the room
+    if(socket.handshake.query.random == "yes") {
+      listOfUnconnectedSockets.push({'id': socket.id});
       connectUsers();
     }
     else {
