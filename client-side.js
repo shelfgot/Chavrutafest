@@ -89,7 +89,6 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
           screenName = $('#screen-name').val();
           emailAddress = $('#email').val();
           console.log("Our screen name is "+screenName+" and our email is "+emailAddress);
-       
 
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
             
@@ -115,11 +114,16 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       peerConnection.addStream(stream);
                       
                                             
+                      var random = true;
+                      if ($('#room-name').val() !== '') {
+                        random = $('#room-name').val();
+                      }
                                             
                                             //socket communication stuff
-                      var socket = io();
-                      var roomName;
+                      var socket = io.connect('', {'query':'random='+random});
                       uuid = createUUID();
+                      var roomName;
+                      
                       //this is the case when the user is first...
                       socket.on('roomCall', (room) => {
                         //we have the assigned room name.

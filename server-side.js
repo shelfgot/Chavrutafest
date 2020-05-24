@@ -45,9 +45,20 @@ var connectUsers = function() {
 io.on('connection', (socket) => {
   console.log('a user connected');
   //add the new user to the list of unconnected users.
-  listOfUnconnectedSockets.push({'id': socket.id});
+
+    //make sure this is us and no one else
+    
+    //random is either true if it's random or it's the name of the room
+    if(socket.handshake.query.random === true) {
+      listOfUnconnectedSockets.push({'id': socket.id, 'uuid': random[1]});
+      connectUsers();
+    }
+    else {
+      socket.join(socket.handshake.query.random);
+    }
+
   //connect the socket to an unconnected user, if such user exists
-  connectUsers();
+
   socket.on('connectRequest', (input) => {
     console.log("we have a connect request");
     input = JSON.parse(input);
