@@ -176,6 +176,7 @@ smallConnection.ontrack = function(event) {
                       //9. Grab the ice candidate on the other side:
                       socket.on('small_ice_candidate', (iceCandidateData) => {
                       //9a. Make sure it isn't us pinging ourselves:
+                        iceCandidateData = JSON.parse(iceCandidateData);
                         if(iceCandidateData.uuid == uuid) return;
                       //10. Add ice candidate to list
                         smallConnection.addIceCandidate(new RTCIceCandidate(iceCandidateData.ice));
