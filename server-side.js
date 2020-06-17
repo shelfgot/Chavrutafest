@@ -3,7 +3,7 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 
-var listOfUnconnectedSockets = [], connectedSockets = [];
+var listOfUnconnectedSockets = [];
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Chavrutafest.html');
@@ -46,8 +46,6 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   //add the new user to the list of unconnected users.
 
-    //make sure this is us and no one else
-    listOfConnectedSockets.push({'id': socket.id});
     //random is either yes if it's random or it's the name of the room
     if(socket.handshake.query.random == "yes") {
 
