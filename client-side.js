@@ -17,9 +17,9 @@ window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || 
 window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
 
   
-var peerConnection, userStream, uuid,
+var peerConnection, smallConnection, smallCandidateId, smallVideoCounter = 0, userStream, uuid,
                   screenName, emailAddress, otherScreenName, otherEmailAddress;
-var peerConnectionConfig = {
+var connectionConfig = {
                   'iceServers': [
                     {'urls': 'stun:stun.stunprotocol.org:3478'},
                     {'urls': 'stun:stun.l.google.com:19302'},
@@ -29,7 +29,7 @@ var peerConnectionConfig = {
                     }
                 };
 //now we need to make a new rtc channel
-peerConnection = new RTCPeerConnection(peerConnectionConfig);
+peerConnection = new RTCPeerConnection(connectionConfig);
                   
   //when rtc gets another track, make that the OTHER video
                   peerConnection.ontrack = function(event) {
@@ -40,9 +40,24 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         $('.bottomBar').append("<p class='info' style='position: absolute; bottom: 0; left: 0'>"+emailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 0'>"+screenName+"</p><p class='info' style='position: absolute; bottom: 0; left: 50vw'>"+otherEmailAddress+"</p><p class='info' style='position: absolute; bottom: 10vh; left: 50vw'>"+otherScreenName+"</p>");
                       }
                     };
+
+//now we must set up the other rtc channel for the smaller videos.
+smallConnection = new RTCPeerConnection(connectionConfig);
+smallConnection.ontrack = function(event) {
+  smallVideoCounter++;
+  try {
+    document.getElementById("thumb"+smallConnection).srcObject = event.streams[0];
+  }
+  catch (error) {
+    console.log("Full house!");
+  }
+};
                 
 //HTML stuff
       $(document).ready(function(){
+        //set all of the small video volumes
+        $('.small').prop("volume", 0.2);
+        //frontpage functionality
         var eye_clicked = false;
         var beard_clicked = false;
         $('.beard').hover(function() {
@@ -93,11 +108,11 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
           $('.videoOverlay').css({display: 'block', width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, background: '#fff', "z-index": 3000, opacity: 1});
             
 
-              //set up variables we'll need later
+
           
               var errorHandler = function(error) {
                 console.log("error: "+error);
-              }
+              };
               
                 //set up user's own video
               if(navigator.mediaDevices.getUserMedia) {
@@ -112,18 +127,65 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       document.getElementById("userVideo").srcObject = stream;
                        
                       peerConnection.addStream(stream);
-                      
+                      smallConnection.addStream(stream);
                                             
                       var random = "yes";
                       if ($('#room-name').val() !== '') {
                         random = $('#room-name').val();
                       }
                                             
-                                            //socket communication stuff
+                      //socket communication stuff
                       var socket = io.connect('', {'query':'random='+random});
                       uuid = createUUID();
                       var roomName;
                       
+                      //small video stuff
+                      //1. We receive the call from the server, telling us that someone new has connected.
+                      socket.on('small_candidate', (candidateId) => {
+                      //1a. We create an offer in response.
+                        smallConnection.createOffer().then(offer => {
+                        //2. We set local description and then send it back to the server.
+                          smallConnection.setLocalDescription(offer);
+                          socket.emit('small_candidate_response', JSON.stringify({'sdp': smallConnection.localDescription, 'address': candidateId}));
+                        });
+                      });
+                      //3. In the meantime, our server has sent two things back to the most recent connectee: (1) the sdp, and (2) the requester's socket id. Here we deal with the acceptance of such a response:
+                      socket.on('small_candidate_response', (candidateResponseData) => {
+                      //4. We set our remote description.
+                        smallConnection.setRemoteDescription(new RTCSessionDescription(candidateResponseData.sdp)).then(function() {
+                          if(candidateResponseData.sdp.type == 'offer') {
+                      //5. We make an answer.
+                            smallConnection.createAnswer().then(answer => {
+                              smallConnection.setLocalDescription(answer);
+                      //6. We now reciprocate and send our details to the remote computer, and since it's not an offer, it will just set the remote description to the same, and it should work out.
+                              smallCandidateId = candidateResponseData.candidateId;
+                              socket.emit('small_candidate_response', JSON.stringify({'sdp': smallConnection.localDescription, 'address': smallCandidateId}) );
+                              
+                            });
+                          }
+                        });
+                      });
+                      //7. Behind the scenes, we have now set the two RTC channels to the same remote session description. Thus we begin to start exchanging webrtc ice candidates (read: ways we can share info). Here is the handler for what happens when the connection occurs:
+                      smallConnection.onicecandidate = function(event) {
+                          if(event.candidate !== null) {
+                      //8. Send the ice candidate to the other computer.
+                            socket.emit('small_ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid}));
+                          }
+                      }
+                      //9. Grab the ice candidate on the other side:
+                      socket.on('small_ice_candidate', (iceCandidateData) => {
+                      //9a. Make sure it isn't us pinging ourselves:
+                        if(iceCandidateData.uuid == uuid) return;
+                      //10. Add ice candidate to list
+                        smallConnection.addIceCandidate(new RTCIceCandidate(iceCandidateData.ice));
+                      });
+                      //Not sure if this is going to work because the ice isn't being sent to the right place...
+                      
+                      
+                      
+                      
+                      
+                      //now for the main video stuff...
                       //this is the case when the user is first...
                       socket.on('roomCall', (room) => {
                         //we have the assigned room name.
@@ -132,11 +194,12 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         socket.emit('setRoom', room);
                         peerConnection.createOffer().then(offer => {
                           peerConnection.setLocalDescription(offer);
-                          console.log("offer created from "+peerConnection.localDescription)
+                          console.log("offer created from "+peerConnection.localDescription);
                            socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': room, 'screenName': screenName, 'emailAddress': emailAddress}) );
                            
                               socket.emit('started', roomName);
                         });
+                        
                       });
                       //the other case-scenario - what happens if you are the second person and you recieve a request?
                       socket.on('connectRequest', (data) => {
@@ -154,24 +217,24 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                         
                         peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(function() {
                           
-                          console.log("we got a new connect request! num: "+data)
+                          console.log("we got a new connect request! num: "+data);
                           
                           if(data.sdp.type == 'offer') {
                             peerConnection.createAnswer().then(answer => {
-                              console.log("we provided an answer!")
+                              console.log("we provided an answer!");
                               peerConnection.setLocalDescription(answer);
                               socket.emit('connectRequest', JSON.stringify({'sdp': peerConnection.localDescription, 'uuid': uuid, 'room': roomName, 'screenName': screenName, 'emailAddress': emailAddress}) );
-                            })
+                            });
                           }
-                        })
+                        });
                       });
-                      //ice sorcery part. I don't really understand what's going on here
+                      //ice sorcery part.
                          //when rtc finds an ice candidate
                       peerConnection.onicecandidate = function(event) {
                         
                           if(event.candidate !== null) {
                             console.log("adding ice.");
-                            socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName}));
+                            socket.emit('ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid, 'room': roomName, 'chavruta': true}));
                           }
                       }
                      peerConnection.oniceconnectionstatechange = function() {
@@ -182,16 +245,17 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                               peerConnection.close();
                             }
                       }
+                      
                       //event listener for ice candidates
                       socket.on('ice', (iceCandidateData) => {
-                        console.log("ice coming!")
-                  
+                        console.log("ice coming!");
                         //check that the sender isn't the same person as the responder
                         if(iceCandidateData.uuid == uuid) {
                          return;
                         }
-                        //now add ice candidate to list
-                        peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidateData.ice))
+                          //now add ice candidate to list
+                          peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidateData.ice));
+                        
                       });
                       
                       //get room name
@@ -202,7 +266,8 @@ peerConnection = new RTCPeerConnection(peerConnectionConfig);
                       
                       socket.on('end', () => {
                         location.reload();
-                      })
+                      });
+                      
                       
                       // Taken from http://stackoverflow.com/a/105074/515584
                       // Strictly speaking, it's not a real UUID, but it gets the job done here

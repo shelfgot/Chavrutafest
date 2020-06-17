@@ -3,14 +3,14 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 
-var listOfUnconnectedSockets = [];
+var listOfUnconnectedSockets = [], connectedSockets = [];
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Chavrutafest.html');
   console.log("you just got served!")
-  /*if(req.get('X-Forwarded-Proto')!='https') {
+  if(req.get('X-Forwarded-Proto')!='https') {
     res.redirect("https://" + req.headers.host + req.url);
-  }*/
+  }
 });
 
 app.get('/client-side.js', (req, res) => {
@@ -32,14 +32,14 @@ var connectUsers = function() {
     var firstUser = io.sockets.sockets[firstUserInfo];
     if(typeof(firstUser) == 'undefined') { return;}
     var roomName =  firstUserInfo + "+" + secondUserInfo;
-    console.log("room "+roomName+" was created, with"+firstUser+" and "+secondUser)
+    console.log("room "+roomName+" was created, with"+firstUser+" and "+secondUser);
     //3) join them to a room
     firstUser.join(roomName);
     secondUser.join(roomName);
     //4) send room name to the firstUser
     firstUser.emit('roomCall', roomName);
   }
-}
+};
 
 //what to do when a new user connects
 io.on('connection', (socket) => {
@@ -47,9 +47,10 @@ io.on('connection', (socket) => {
   //add the new user to the list of unconnected users.
 
     //make sure this is us and no one else
-    
+    listOfConnectedSockets.push({'id': socket.id});
     //random is either yes if it's random or it's the name of the room
     if(socket.handshake.query.random == "yes") {
+
       listOfUnconnectedSockets.push({'id': socket.id});
       connectUsers();
     }
@@ -58,27 +59,41 @@ io.on('connection', (socket) => {
       socket.emit('roomCall', socket.handshake.query.random);
     }
 
+  //small video connections!
+  /*
+  STRATEGY:
+  -emit to everyone
+  -see client-side.js for rest.
+  */
+ 
+  socket.broadcast.emit('small_candidate', socket.id);
+  socket.on('small_candidate_response', (data) => {
+    io.to(JSON.parse(data).address).emit('small_candidate_response', JSON.stringify({'sdp': JSON.parse(data.sdp), 'address': socket.id}));
+  });
+  socket.on('small_ice', (iceData) => {
+    socket.emit('small_ice_candidate', iceData);
+  });
+ 
   //connect the socket to an unconnected user, if such user exists
 
   socket.on('connectRequest', (input) => {
     console.log("we have a connect request");
     input = JSON.parse(input);
-    io.to(input.room).emit('connectRequest', input)
+    io.to(input.room).emit('connectRequest', input);
   });
   socket.on('setRoom', (roomName) => {
-    console.log("sending room number "+roomName+" down the line.")
+    console.log("sending room number "+roomName+" down the line.");
     io.to(roomName).emit('setRoom', roomName);
   });
-  socket.on('ice', (iceData) => {
+  socket.on('ice', (iceData) => {sm
     iceData = JSON.parse(iceData);
-    io.to(iceData.room).emit('ice', iceData)
+    io.to(iceData.room).emit('ice', iceData);
   });
   socket.on('started', (room) => {
     setTimeout(function() {
       io.to(room).emit('end')}, 900000);
-  })
+  });
 });
-
 
 
 http.listen(process.env.PORT || 3000, () => {
