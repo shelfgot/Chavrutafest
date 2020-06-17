@@ -66,6 +66,7 @@ io.on('connection', (socket) => {
  
   socket.broadcast.emit('small_candidate', socket.id);
   socket.on('small_candidate_response', (data) => {
+    console.log("creating small candidate response...");
     io.to(JSON.parse(data).address).emit('small_candidate_response', JSON.stringify({'sdp': JSON.parse(data.sdp), 'address': socket.id}));
   });
   socket.on('small_ice', (iceData) => {
@@ -83,7 +84,7 @@ io.on('connection', (socket) => {
     console.log("sending room number "+roomName+" down the line.");
     io.to(roomName).emit('setRoom', roomName);
   });
-  socket.on('ice', (iceData) => {sm
+  socket.on('ice', (iceData) => {
     iceData = JSON.parse(iceData);
     io.to(iceData.room).emit('ice', iceData);
   });

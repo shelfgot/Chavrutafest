@@ -143,6 +143,7 @@ smallConnection.ontrack = function(event) {
                       //1. We receive the call from the server, telling us that someone new has connected.
                       socket.on('small_candidate', (candidateId) => {
                       //1a. We create an offer in response.
+                        console.log("creating small offer;");
                         smallConnection.createOffer().then(offer => {
                         //2. We set local description and then send it back to the server.
                           smallConnection.setLocalDescription(offer);
