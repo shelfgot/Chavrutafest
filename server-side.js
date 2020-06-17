@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('small_candidate', socket.id);
   socket.on('small_candidate_response', (data) => {
     console.log("creating small candidate response...");
-    io.to(JSON.parse(data).address).emit('small_candidate_response', JSON.stringify({'sdp': JSON.parse(data.sdp), 'address': socket.id}));
+    io.to(JSON.parse(data).address).emit('small_candidate_response', JSON.stringify({'sdp': data.sdp, 'address': socket.id}));
   });
   socket.on('small_ice', (iceData) => {
     socket.emit('small_ice_candidate', iceData);
