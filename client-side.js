@@ -17,7 +17,7 @@ window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || 
 window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
 
   
-var peerConnection, smallConnection, smallCandidateId, smallVideoCounter = 0, userStream, uuid,
+var peerConnection, smallConnection, smallCandidateId, smallVideoCounter = 0, userStream, uuid, candidatePersonalId
                   screenName, emailAddress, otherScreenName, otherEmailAddress;
 var connectionConfig = {
                   'iceServers': [
@@ -44,6 +44,7 @@ peerConnection = new RTCPeerConnection(connectionConfig);
 //now we must set up the other rtc channel for the smaller videos.
 smallConnection = new RTCPeerConnection(connectionConfig);
 smallConnection.ontrack = function(event) {
+  console.log("New small connection!");
   smallVideoCounter++;
   try {
     document.getElementById("thumb"+smallConnection).srcObject = event.streams[0];
@@ -147,15 +148,20 @@ smallConnection.ontrack = function(event) {
                         smallConnection.createOffer().then(offer => {
                         //2. We set local description and then send it back to the server.
                           smallConnection.setLocalDescription(offer);
+                          candidatePersonalId = candidateId;
                           socket.emit('small_candidate_response', JSON.stringify({'sdp': smallConnection.localDescription, 'address': candidateId}));
                         });
                       });
                       //3. In the meantime, our server has sent two things back to the most recent connectee: (1) the sdp, and (2) the requester's socket id. Here we deal with the acceptance of such a response:
                       socket.on('small_candidate_response', (candidateResponseData) => {
                       //4. We set our remote description.
+                        if (candidateResponseData.address == candidatePersonalId) {
+                          return;
+                        }
                         smallConnection.setRemoteDescription(new RTCSessionDescription(candidateResponseData.sdp)).then(function() {
                           if(candidateResponseData.sdp.type == 'offer') {
                       //5. We make an answer.
+                          console.log("We made a small answer!");
                             smallConnection.createAnswer().then(answer => {
                               smallConnection.setLocalDescription(answer);
                       //6. We now reciprocate and send our details to the remote computer, and since it's not an offer, it will just set the remote description to the same, and it should work out.
@@ -170,6 +176,7 @@ smallConnection.ontrack = function(event) {
                       smallConnection.onicecandidate = function(event) {
                           if(event.candidate !== null) {
                       //8. Send the ice candidate to the other computer.
+                            console.log("small ice candidate recieved!");
                             socket.emit('small_ice', JSON.stringify({'ice': event.candidate, 'uuid': uuid}));
                           }
                       }

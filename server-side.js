@@ -63,7 +63,6 @@ io.on('connection', (socket) => {
   -emit to everyone
   -see client-side.js for rest.
   */
- 
   socket.broadcast.emit('small_candidate', socket.id);
   socket.on('small_candidate_response', (data) => {
     console.log("creating small candidate response...");
